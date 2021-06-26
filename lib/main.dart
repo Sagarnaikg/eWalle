@@ -1,4 +1,5 @@
 import 'package:ewalle/pages/auth/screen.dart';
+import 'package:ewalle/pages/home/screen.dart';
 import 'package:ewalle/resources/theme_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'eWalle',
       theme: themeData,
-      home: SignIn(),
+      home: HomePage(),
       debugShowCheckedModeBanner: false,
     );
   }
