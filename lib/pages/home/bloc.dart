@@ -19,9 +19,17 @@ class HomeBloc {
   Function(MENU_STATE)? get setmenuStateStream =>
       menuStateController.isClosed ? null : menuStateController.sink.add;
 
+  final homePageController = BehaviorSubject<int>.seeded(0);
+
+  Stream<int> get homePageStream => homePageController.stream;
+
+  Function(int)? get setHomePageStream =>
+      homePageController.isClosed ? null : homePageController.sink.add;
+
   void dispose() {
     _positionController.close();
     menuStateController.close();
+    homePageController.close();
   }
 }
 

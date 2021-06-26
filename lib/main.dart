@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'eWalle',
       theme: themeData,
-      home: HomePage(),
+      home: SignIn(),
       debugShowCheckedModeBanner: false,
     );
   }
