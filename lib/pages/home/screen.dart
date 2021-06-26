@@ -10,7 +10,337 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+      backgroundColor: AppColor.COLOR_F1F3F6,
+      body: Column(
+        children: [
+          Expanded(
+            flex: 15,
+            child: Container(
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 60,
+                    child: Container(
+                      child: Container(
+                        padding: EdgeInsets.only(left: 20),
+                        width: double.infinity,
+                        height: double.infinity,
+                        decoration: BoxDecoration(
+                          color: AppColor.COLOR_FFFFFF,
+                          borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(70),
+                          ),
+                        ),
+                        child: SafeArea(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: Container(
+                                  color: AppColor.COLOR_F1F3F6,
+                                  child: SvgPicture.asset(
+                                    AppMedia.getImage("avatar01.svg"),
+                                    width: 50,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 13,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Carol Black",
+                                    style: TextStyle(
+                                      color: AppColor.COLOR_1B1D28,
+                                      fontSize: 20,
+                                      fontWeight: AppFontWeight.semiBold,
+                                      height: 1.4,
+                                    ),
+                                  ),
+                                  Text(
+                                    "Seattle,Washington",
+                                    style: TextStyle(
+                                      color: AppColor.COLOR_7B7F9E,
+                                      fontSize: 14,
+                                      letterSpacing: 0.8,
+                                      fontWeight: AppFontWeight.regular,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 40,
+                    child: SafeArea(
+                      child: Container(
+                        padding: EdgeInsets.only(right: 30),
+                        alignment: Alignment.centerRight,
+                        child: SvgPicture.asset(
+                          AppMedia.getIcon("close.svg"),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 65,
+            child: Container(
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 50,
+                    child: Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(child: Container()),
+                          Expanded(
+                            flex: 4,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.only(
+                                    left: 20,
+                                    top: 7,
+                                    bottom: 7,
+                                  ),
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                    left: BorderSide(
+                                      width: 5,
+                                      color: AppColor.COLOR_FFAC30,
+                                    ),
+                                  )),
+                                  child: Text(
+                                    "Home",
+                                    style: TextStyle(
+                                      color: AppColor.COLOR_1B1D28,
+                                      fontSize: 18,
+                                      fontWeight: AppFontWeight.semiBold,
+                                      height: 1.4,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.only(
+                                    left: 20,
+                                    top: 7,
+                                    bottom: 7,
+                                  ),
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                    left: BorderSide(
+                                      width: 5,
+                                      color: AppColor.COLOR_F1F3F6,
+                                    ),
+                                  )),
+                                  child: Text(
+                                    "Profile",
+                                    style: TextStyle(
+                                      color: AppColor.COLOR_1B1D28,
+                                      fontSize: 18,
+                                      fontWeight: AppFontWeight.semiBold,
+                                      height: 1.4,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.only(
+                                    left: 20,
+                                    top: 7,
+                                    bottom: 7,
+                                  ),
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                    left: BorderSide(
+                                      width: 5,
+                                      color: AppColor.COLOR_F1F3F6,
+                                    ),
+                                  )),
+                                  child: Text(
+                                    "Accounts",
+                                    style: TextStyle(
+                                      color: AppColor.COLOR_1B1D28,
+                                      fontSize: 18,
+                                      fontWeight: AppFontWeight.semiBold,
+                                      height: 1.4,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.only(
+                                    left: 20,
+                                    top: 7,
+                                    bottom: 7,
+                                  ),
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                    left: BorderSide(
+                                      width: 5,
+                                      color: AppColor.COLOR_F1F3F6,
+                                    ),
+                                  )),
+                                  child: Text(
+                                    "Transactions",
+                                    style: TextStyle(
+                                      color: AppColor.COLOR_1B1D28,
+                                      fontSize: 18,
+                                      fontWeight: AppFontWeight.semiBold,
+                                      height: 1.4,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.only(
+                                    left: 20,
+                                    top: 7,
+                                    bottom: 7,
+                                  ),
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                    left: BorderSide(
+                                      width: 5,
+                                      color: AppColor.COLOR_F1F3F6,
+                                    ),
+                                  )),
+                                  child: Text(
+                                    "Stats",
+                                    style: TextStyle(
+                                      color: AppColor.COLOR_1B1D28,
+                                      fontSize: 18,
+                                      fontWeight: AppFontWeight.semiBold,
+                                      height: 1.4,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.only(
+                                    left: 20,
+                                    top: 7,
+                                    bottom: 7,
+                                  ),
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                    left: BorderSide(
+                                      width: 5,
+                                      color: AppColor.COLOR_F1F3F6,
+                                    ),
+                                  )),
+                                  child: Text(
+                                    "Settings",
+                                    style: TextStyle(
+                                      color: AppColor.COLOR_1B1D28,
+                                      fontSize: 18,
+                                      fontWeight: AppFontWeight.semiBold,
+                                      height: 1.4,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.only(
+                                    left: 20,
+                                    top: 7,
+                                    bottom: 7,
+                                  ),
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                    left: BorderSide(
+                                      width: 5,
+                                      color: AppColor.COLOR_F1F3F6,
+                                    ),
+                                  )),
+                                  child: Text(
+                                    "Help",
+                                    style: TextStyle(
+                                      color: AppColor.COLOR_1B1D28,
+                                      fontSize: 18,
+                                      fontWeight: AppFontWeight.semiBold,
+                                      height: 1.4,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(child: Container()),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 50,
+                    child: Container(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 20,
+            child: Container(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      SvgPicture.asset(
+                        AppMedia.getIcon("logout.svg"),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        "Logout",
+                        style: TextStyle(
+                          color: AppColor.COLOR_1B1D28,
+                          fontSize: 20,
+                          fontWeight: AppFontWeight.semiBold,
+                          height: 1.4,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 1,
+                  ),
+                  Text(
+                    "Version 1.0.0",
+                    style: TextStyle(
+                      color: AppColor.COLOR_7B7F9E,
+                      fontSize: 14,
+                      letterSpacing: 0.8,
+                      fontWeight: AppFontWeight.regular,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/* 
+SafeArea(
         child: Column(
           children: [
             Expanded(
@@ -586,6 +916,4 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
+       */
