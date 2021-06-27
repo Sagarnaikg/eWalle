@@ -1,7 +1,9 @@
+import 'package:ewalle/pages/auth/screen.dart';
 import 'package:ewalle/pages/home/bloc.dart';
 import 'package:ewalle/resources/colors.dart';
 import 'package:ewalle/resources/font_weights.dart';
 import 'package:ewalle/resources/media.dart';
+import 'package:ewalle/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -93,18 +95,7 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               );
                             } else {
-                              return IndexedStack(
-                                index: 0,
-                                children: [
-                                  getHome(),
-                                  getPage("Profile"),
-                                  getPage("Accounts"),
-                                  getPage("Transactions"),
-                                  getPage("Stats"),
-                                  getPage("Settings"),
-                                  getPage("Help"),
-                                ],
-                              );
+                              return getHome();
                             }
                           }),
                     ),
@@ -132,23 +123,26 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Column getHome() {
-    return Column(
-      children: [
-        Expanded(
-          flex: 25,
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 20),
+  Widget getHome() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text(
-                  "Account Overview",
-                  style: TextStyle(
-                    color: AppColor.COLOR_3A4276,
-                    fontSize: 16,
-                    fontWeight: AppFontWeight.semiBold,
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  child: Text(
+                    "Account Overview",
+                    style: TextStyle(
+                      color: AppColor.COLOR_3A4276,
+                      fontSize: 16,
+                      fontWeight: AppFontWeight.semiBold,
+                    ),
                   ),
                 ),
                 Container(
@@ -207,13 +201,10 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Expanded(
-          flex: 25,
-          child: Container(
+          SizedBox(
+            height: 30,
+          ),
+          Container(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -397,10 +388,7 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-        ),
-        Expanded(
-          flex: 35,
-          child: Container(
+          Container(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               children: [
@@ -431,255 +419,252 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
-                Expanded(
-                  child: GridView.count(
-                    physics: NeverScrollableScrollPhysics(),
-                    padding: EdgeInsets.symmetric(vertical: 13),
-                    mainAxisSpacing: 5,
-                    primary: false,
-                    childAspectRatio: 1 / 1.3,
-                    crossAxisCount: 4,
-                    children: <Widget>[
-                      Column(
-                        children: [
-                          Container(
-                            width: 65,
-                            height: 65,
-                            decoration: BoxDecoration(
-                              color: AppColor.COLOR_F1F3F6,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            padding: EdgeInsets.all(20),
-                            child: SvgPicture.asset(AppMedia.getIcon(
-                              "send-money.svg",
-                            )),
+                SizedBox(
+                  height: 15,
+                ),
+                Wrap(
+                  spacing: 30,
+                  runSpacing: 20,
+                  children: [
+                    Column(
+                      children: [
+                        Container(
+                          width: 65,
+                          height: 65,
+                          decoration: BoxDecoration(
+                            color: AppColor.COLOR_F1F3F6,
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          SizedBox(
-                            height: 5,
+                          padding: EdgeInsets.all(20),
+                          child: SvgPicture.asset(AppMedia.getIcon(
+                            "send-money.svg",
+                          )),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          "Send\nMoney",
+                          style: TextStyle(
+                            color: AppColor.COLOR_7B7F9E,
+                            fontSize: 14,
+                            height: 1.5,
+                            fontWeight: AppFontWeight.regular,
                           ),
-                          Text(
-                            "Send\nMoney",
-                            style: TextStyle(
-                              color: AppColor.COLOR_7B7F9E,
-                              fontSize: 14,
-                              height: 1.5,
-                              fontWeight: AppFontWeight.regular,
-                            ),
-                            textAlign: TextAlign.center,
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          width: 65,
+                          height: 65,
+                          decoration: BoxDecoration(
+                            color: AppColor.COLOR_F1F3F6,
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Container(
-                            width: 65,
-                            height: 65,
-                            decoration: BoxDecoration(
-                              color: AppColor.COLOR_F1F3F6,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            padding: EdgeInsets.all(20),
-                            child: SvgPicture.asset(AppMedia.getIcon(
-                              "receive.svg",
-                            )),
+                          padding: EdgeInsets.all(20),
+                          child: SvgPicture.asset(AppMedia.getIcon(
+                            "receive.svg",
+                          )),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          "Receive\nMoney",
+                          style: TextStyle(
+                            color: AppColor.COLOR_7B7F9E,
+                            fontSize: 14,
+                            height: 1.5,
+                            fontWeight: AppFontWeight.regular,
                           ),
-                          SizedBox(
-                            height: 5,
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          width: 65,
+                          height: 65,
+                          decoration: BoxDecoration(
+                            color: AppColor.COLOR_F1F3F6,
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          Text(
-                            "Receive\nMoney",
-                            style: TextStyle(
-                              color: AppColor.COLOR_7B7F9E,
-                              fontSize: 14,
-                              height: 1.5,
-                              fontWeight: AppFontWeight.regular,
-                            ),
-                            textAlign: TextAlign.center,
+                          padding: EdgeInsets.all(20),
+                          child: SvgPicture.asset(AppMedia.getIcon(
+                            "mobile.svg",
+                          )),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          "Mobile\nPrepaid",
+                          style: TextStyle(
+                            color: AppColor.COLOR_7B7F9E,
+                            fontSize: 14,
+                            height: 1.5,
+                            fontWeight: AppFontWeight.regular,
                           ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Container(
-                            width: 65,
-                            height: 65,
-                            decoration: BoxDecoration(
-                              color: AppColor.COLOR_F1F3F6,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            padding: EdgeInsets.all(20),
-                            child: SvgPicture.asset(AppMedia.getIcon(
-                              "mobile.svg",
-                            )),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          width: 65,
+                          height: 65,
+                          decoration: BoxDecoration(
+                            color: AppColor.COLOR_F1F3F6,
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          SizedBox(
-                            height: 5,
+                          padding: EdgeInsets.all(20),
+                          child: SvgPicture.asset(AppMedia.getIcon(
+                            "electric.svg",
+                          )),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          "Electricity\nBill",
+                          style: TextStyle(
+                            color: AppColor.COLOR_7B7F9E,
+                            fontSize: 14,
+                            height: 1.5,
+                            fontWeight: AppFontWeight.regular,
                           ),
-                          Text(
-                            "Mobile\nPrepaid",
-                            style: TextStyle(
-                              color: AppColor.COLOR_7B7F9E,
-                              fontSize: 14,
-                              height: 1.5,
-                              fontWeight: AppFontWeight.regular,
-                            ),
-                            textAlign: TextAlign.center,
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          width: 65,
+                          height: 65,
+                          decoration: BoxDecoration(
+                            color: AppColor.COLOR_F1F3F6,
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Container(
-                            width: 65,
-                            height: 65,
-                            decoration: BoxDecoration(
-                              color: AppColor.COLOR_F1F3F6,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            padding: EdgeInsets.all(20),
-                            child: SvgPicture.asset(AppMedia.getIcon(
-                              "electric.svg",
-                            )),
+                          padding: EdgeInsets.all(20),
+                          child: SvgPicture.asset(AppMedia.getIcon(
+                            "offers.svg",
+                          )),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          "Cashback\nOffer",
+                          style: TextStyle(
+                            color: AppColor.COLOR_7B7F9E,
+                            fontSize: 14,
+                            height: 1.5,
+                            fontWeight: AppFontWeight.regular,
                           ),
-                          SizedBox(
-                            height: 5,
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          width: 65,
+                          height: 65,
+                          decoration: BoxDecoration(
+                            color: AppColor.COLOR_F1F3F6,
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          Text(
-                            "Electricity\nBill",
-                            style: TextStyle(
-                              color: AppColor.COLOR_7B7F9E,
-                              fontSize: 14,
-                              height: 1.5,
-                              fontWeight: AppFontWeight.regular,
-                            ),
-                            textAlign: TextAlign.center,
+                          padding: EdgeInsets.all(20),
+                          child: SvgPicture.asset(AppMedia.getIcon(
+                            "tickets.svg",
+                          )),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          "Movie\nTickets",
+                          style: TextStyle(
+                            color: AppColor.COLOR_7B7F9E,
+                            fontSize: 14,
+                            height: 1.5,
+                            fontWeight: AppFontWeight.regular,
                           ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Container(
-                            width: 65,
-                            height: 65,
-                            decoration: BoxDecoration(
-                              color: AppColor.COLOR_F1F3F6,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            padding: EdgeInsets.all(20),
-                            child: SvgPicture.asset(AppMedia.getIcon(
-                              "offers.svg",
-                            )),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          width: 65,
+                          height: 65,
+                          decoration: BoxDecoration(
+                            color: AppColor.COLOR_F1F3F6,
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          SizedBox(
-                            height: 5,
+                          padding: EdgeInsets.all(20),
+                          child: SvgPicture.asset(AppMedia.getIcon(
+                            "flight.svg",
+                          )),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          "Flight\nTickets",
+                          style: TextStyle(
+                            color: AppColor.COLOR_7B7F9E,
+                            fontSize: 14,
+                            height: 1.5,
+                            fontWeight: AppFontWeight.regular,
                           ),
-                          Text(
-                            "Cashback\nOffer",
-                            style: TextStyle(
-                              color: AppColor.COLOR_7B7F9E,
-                              fontSize: 14,
-                              height: 1.5,
-                              fontWeight: AppFontWeight.regular,
-                            ),
-                            textAlign: TextAlign.center,
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          width: 65,
+                          height: 65,
+                          decoration: BoxDecoration(
+                            color: AppColor.COLOR_F1F3F6,
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Container(
-                            width: 65,
-                            height: 65,
-                            decoration: BoxDecoration(
-                              color: AppColor.COLOR_F1F3F6,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            padding: EdgeInsets.all(20),
-                            child: SvgPicture.asset(AppMedia.getIcon(
-                              "tickets.svg",
-                            )),
+                          padding: EdgeInsets.all(20),
+                          child: SvgPicture.asset(AppMedia.getIcon(
+                            "options.svg",
+                          )),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          "More\nOptions",
+                          style: TextStyle(
+                            color: AppColor.COLOR_7B7F9E,
+                            fontSize: 14,
+                            height: 1.5,
+                            fontWeight: AppFontWeight.regular,
                           ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "Movie\nTickets",
-                            style: TextStyle(
-                              color: AppColor.COLOR_7B7F9E,
-                              fontSize: 14,
-                              height: 1.5,
-                              fontWeight: AppFontWeight.regular,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Container(
-                            width: 65,
-                            height: 65,
-                            decoration: BoxDecoration(
-                              color: AppColor.COLOR_F1F3F6,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            padding: EdgeInsets.all(20),
-                            child: SvgPicture.asset(AppMedia.getIcon(
-                              "flight.svg",
-                            )),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "Flight\nTickets",
-                            style: TextStyle(
-                              color: AppColor.COLOR_7B7F9E,
-                              fontSize: 14,
-                              height: 1.5,
-                              fontWeight: AppFontWeight.regular,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Container(
-                            width: 65,
-                            height: 65,
-                            decoration: BoxDecoration(
-                              color: AppColor.COLOR_F1F3F6,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            padding: EdgeInsets.all(20),
-                            child: SvgPicture.asset(AppMedia.getIcon(
-                              "options.svg",
-                            )),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "More\nOptions",
-                            style: TextStyle(
-                              color: AppColor.COLOR_7B7F9E,
-                              fontSize: 14,
-                              height: 1.5,
-                              fontWeight: AppFontWeight.regular,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ],
                 )
               ],
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -759,7 +744,7 @@ class _HomePageState extends State<HomePage> {
             child: Row(
               children: [
                 Expanded(
-                  flex: 60,
+                  flex: 70,
                   child: Container(
                     child: Container(
                       padding: EdgeInsets.only(left: 20),
@@ -773,7 +758,6 @@ class _HomePageState extends State<HomePage> {
                       ),
                       child: SafeArea(
                         child: Row(
-                          mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -889,9 +873,10 @@ class _HomePageState extends State<HomePage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(child: Container()),
+                        Spacer(),
                         Expanded(
-                          flex: 4,
+                          flex:
+                              MediaQuery.of(context).size.height < 590 ? 10 : 4,
                           child: StreamBuilder<dynamic>(
                               stream: bloc.homePageStream,
                               builder: (context, snapshot) {
@@ -912,7 +897,8 @@ class _HomePageState extends State<HomePage> {
                                 return Container();
                               }),
                         ),
-                        Expanded(child: Container()),
+                        Spacer(),
+                        /*   Expanded(child: Container()), */
                       ],
                     ),
                   ),
@@ -933,24 +919,54 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    SvgPicture.asset(
-                      AppMedia.getIcon("logout.svg"),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      "Logout",
-                      style: TextStyle(
-                        color: AppColor.COLOR_1B1D28,
-                        fontSize: 20,
-                        fontWeight: AppFontWeight.semiBold,
-                        height: 1.4,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pushReplacement(
+                      PageRouteBuilder(
+                        transitionDuration: Duration(milliseconds: 600),
+                        reverseTransitionDuration: Duration(milliseconds: 600),
+                        pageBuilder: (context, animation, secondaryanimation) =>
+                            SignIn(),
+                        transitionsBuilder:
+                            (context, animation, secondaryanimation, child) {
+                          return SlideTransition(
+                            child: child,
+                            position: animation.drive(
+                              Tween(
+                                begin: Offset(-1, 0),
+                                end: Offset(0, 0),
+                              ).chain(
+                                CurveTween(
+                                  curve: Curves.easeInCubic,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                    ),
-                  ],
+                    );
+
+                    Auth.setAuthState(false);
+                  },
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        AppMedia.getIcon("logout.svg"),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        "Logout",
+                        style: TextStyle(
+                          color: AppColor.COLOR_1B1D28,
+                          fontSize: 20,
+                          fontWeight: AppFontWeight.semiBold,
+                          height: 1.4,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(
                   height: 1,
@@ -972,51 +988,50 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Container getNavigationOption(String title, int selectedIndex) {
-    return Container(
-      padding: EdgeInsets.only(
-        left: 20,
-        top: 7,
-        bottom: 7,
-      ),
-      decoration: BoxDecoration(
-          border: Border(
-        left: BorderSide(
-          width: 5,
-          color: title == menuList[selectedIndex]
-              ? AppColor.COLOR_FFAC30
-              : AppColor.COLOR_F1F3F6,
+  Widget getNavigationOption(String title, int selectedIndex) {
+    return GestureDetector(
+      onTap: () {
+        switch (title) {
+          case "Home":
+            bloc.setHomePageStream!(0);
+            break;
+          case "Profile":
+            bloc.setHomePageStream!(1);
+            break;
+          case "Accounts":
+            bloc.setHomePageStream!(2);
+            break;
+          case "Transactions":
+            bloc.setHomePageStream!(3);
+            break;
+          case "Stats":
+            bloc.setHomePageStream!(4);
+            break;
+          case "Settings":
+            bloc.setHomePageStream!(5);
+            break;
+          case "Help":
+            bloc.setHomePageStream!(6);
+            break;
+        }
+        bloc.setPositionStream!(PositionOffset(x: 0, y: 0, scale: 1, angle: 0));
+        bloc.setmenuStateStream!(MENU_STATE.CLOSE);
+      },
+      child: Container(
+        padding: EdgeInsets.only(
+          left: 20,
+          top: 7,
+          bottom: 7,
         ),
-      )),
-      child: GestureDetector(
-        onTap: () {
-          switch (title) {
-            case "Home":
-              bloc.setHomePageStream!(0);
-              break;
-            case "Profile":
-              bloc.setHomePageStream!(1);
-              break;
-            case "Accounts":
-              bloc.setHomePageStream!(2);
-              break;
-            case "Transactions":
-              bloc.setHomePageStream!(3);
-              break;
-            case "Stats":
-              bloc.setHomePageStream!(4);
-              break;
-            case "Settings":
-              bloc.setHomePageStream!(5);
-              break;
-            case "Help":
-              bloc.setHomePageStream!(6);
-              break;
-          }
-          bloc.setPositionStream!(
-              PositionOffset(x: 0, y: 0, scale: 1, angle: 0));
-          bloc.setmenuStateStream!(MENU_STATE.CLOSE);
-        },
+        decoration: BoxDecoration(
+            border: Border(
+          left: BorderSide(
+            width: 5,
+            color: title == menuList[selectedIndex]
+                ? AppColor.COLOR_FFAC30
+                : AppColor.COLOR_F1F3F6,
+          ),
+        )),
         child: Text(
           title,
           style: TextStyle(

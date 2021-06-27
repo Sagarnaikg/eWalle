@@ -2,6 +2,7 @@ import 'package:ewalle/pages/home/screen.dart';
 import 'package:ewalle/resources/colors.dart';
 import 'package:ewalle/resources/font_weights.dart';
 import 'package:ewalle/resources/media.dart';
+import 'package:ewalle/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -128,7 +129,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                               ],
                             ),
                             Text(
-                              "Open An Account For Digital \nE-Wallet Solutions.Instant Payouts. ",
+                              "Open An Account For Digital  E-Wallet Solutions. Instant Payouts. ",
                               style: TextStyle(
                                 color: AppColor.COLOR_7B7F9E,
                                 fontSize: 16,
@@ -179,7 +180,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                                       Color(0xaaFF9900)),
                                 ),
                                 onPressed: () {
-                                  Navigator.of(context).push(
+                                  Navigator.of(context).pushReplacement(
                                     PageRouteBuilder(
                                       transitionDuration:
                                           Duration(milliseconds: 600),
@@ -206,6 +207,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                                       },
                                     ),
                                   );
+                                  Auth.setAuthState(true);
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -238,6 +240,7 @@ class _SignInState extends State<SignIn> with SingleTickerProviderStateMixin {
                             ),
                             GestureDetector(
                               onTap: () {
+                                Auth.setAuthState(true);
                                 Navigator.of(context).push(
                                   PageRouteBuilder(
                                     transitionDuration:
