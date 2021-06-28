@@ -1,16 +1,46 @@
-# ewalle
 
-A new Flutter project.
+# eWalle
 
-## Getting Started
+eWalle means electronic wallet or digital wallet where people can transfer money between their family, friends. Current app was designed based on UI and page transition animations that means every component on the app works but does nothing in terms of logic.
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+## Demo
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+Insert gif or link to demo
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+  
+## Features
+
+- Built with Light mode 
+- Minimalistic design  
+- Every page has unique transitions
+- App Comes with cool animations
+- Remembers your login status
+
+  
+## Installation 
+
+
+You can try our app by running below commands
+
+```bash 
+    git clone https://github.com/Sagarnaikg/eWalle/
+    cd eWalle
+    Flutter run
+```
+( Make sure to install Flutter sdk before runing the project )
+
+Or You can directly install our app through the .apk file which will be published soon.
+    
+## Libraries and Packages
+
+- **Flutter** for developing the app.
+- **Shared_preferences** for local storage.
+- **rxdart** for state management.
+
+  
+## Screenshots
+
+![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+
+  
