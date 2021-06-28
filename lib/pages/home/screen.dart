@@ -1,11 +1,13 @@
-import 'package:ewalle/pages/auth/screen.dart';
 import 'package:ewalle/pages/home/bloc.dart';
+import 'package:ewalle/pages/home/widgets/app_bar.dart';
+import 'package:ewalle/pages/home/widgets/balance_card.dart';
+import 'package:ewalle/pages/home/widgets/menu.dart';
+import 'package:ewalle/pages/home/widgets/send_money.dart';
+import 'package:ewalle/pages/home/widgets/services.dart';
 import 'package:ewalle/resources/colors.dart';
 import 'package:ewalle/resources/font_weights.dart';
-import 'package:ewalle/resources/media.dart';
-import 'package:ewalle/services/auth_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'widgets/buttons.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,15 +18,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late HomeBloc bloc;
-  List<String> menuList = [
-    "Home",
-    "Profile",
-    "Accounts",
-    "Transactions",
-    "Stats",
-    "Settings",
-    "Help"
-  ];
 
   @override
   void initState() {
@@ -33,882 +26,125 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  void dispose() {
-    bloc.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.COLOR_F1F3F6,
       body: Stack(
         children: [
-          getBackground(),
-          getTopScreen(),
+          BackgroundWidget(bloc: bloc, context: context),
+          TopScreen(bloc: bloc),
         ],
       ),
     );
   }
 
-  Widget getTopScreen() {
+  @override
+  void dispose() {
+    bloc.dispose();
+    super.dispose();
+  }
+}
+
+class TopScreen extends StatelessWidget {
+  const TopScreen({
+    Key? key,
+    required this.bloc,
+  }) : super(key: key);
+
+  final HomeBloc bloc;
+
+  @override
+  Widget build(BuildContext context) {
     return StreamBuilder<dynamic>(
-        stream: bloc.positionStream,
-        builder: (context, snapshot) {
-          if (snapshot.data != null) {
-            return AnimatedContainer(
-              duration: Duration(milliseconds: 300),
-              curve: Curves.easeInOutCubic,
-              transform:
-                  Matrix4.translationValues(snapshot.data.x, snapshot.data.y, 0)
-                    ..scale(snapshot.data.scale)
-                    ..rotateZ(snapshot.data.angle),
-              decoration: BoxDecoration(
-                color: AppColor.COLOR_FFFFFF,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(
-                      bloc.menuStateController.value == MENU_STATE.CLOSE
-                          ? 0
-                          : 30),
-                ),
+      stream: bloc.positionStream,
+      builder: (context, snapshot) {
+        if (snapshot.data != null) {
+          return AnimatedContainer(
+            duration: Duration(milliseconds: 300),
+            curve: Curves.easeInOutCubic,
+            transform:
+                Matrix4.translationValues(snapshot.data.x, snapshot.data.y, 0)
+                  ..scale(snapshot.data.scale)
+                  ..rotateZ(snapshot.data.angle),
+            decoration: BoxDecoration(
+              color: AppColor.COLOR_FFFFFF,
+              borderRadius: BorderRadius.all(
+                Radius.circular(
+                    bloc.menuStateController.value == MENU_STATE.CLOSE
+                        ? 0
+                        : 30),
               ),
-              child: SafeArea(
-                child: Column(
-                  children: [
-                    getAppBar(context),
-                    Expanded(
-                      flex: 90,
-                      child: StreamBuilder<dynamic>(
-                          stream: bloc.homePageStream,
-                          builder: (context, snapshot) {
-                            if (snapshot.data != null) {
-                              return IndexedStack(
-                                index: snapshot.data,
-                                children: [
-                                  getHome(),
-                                  getPage("Profile"),
-                                  getPage("Accounts"),
-                                  getPage("Transactions"),
-                                  getPage("Stats"),
-                                  getPage("Settings"),
-                                  getPage("Help"),
-                                ],
-                              );
-                            } else {
-                              return getHome();
-                            }
-                          }),
-                    ),
-                  ],
-                ),
+            ),
+            child: SafeArea(
+              child: Column(
+                children: [
+                  CustomAppBar(bloc: bloc, context: context),
+                  Expanded(
+                    flex: 90,
+                    child: StreamBuilder<dynamic>(
+                        stream: bloc.homePageStream,
+                        builder: (context, snapshot) {
+                          if (snapshot.data != null) {
+                            return IndexedStack(
+                              index: snapshot.data,
+                              children: [
+                                HomeWidget(),
+                                Page(title: "Profile"),
+                                Page(title: "Accounts"),
+                                Page(title: "Transactions"),
+                                Page(title: "Stats"),
+                                Page(title: "Settings"),
+                                Page(title: "Help"),
+                              ],
+                            );
+                          } else {
+                            return HomeWidget();
+                          }
+                        }),
+                  ),
+                ],
               ),
-            );
-          } else {
-            return Container();
-          }
-        });
-  }
-
-  Widget getPage(String title) {
-    return Container(
-      child: Center(
-        child: Text(
-          title,
-          style: TextStyle(
-            fontSize: 22,
-            color: AppColor.COLOR_3A4276,
-          ),
-        ),
-      ),
+            ),
+          );
+        } else {
+          return Container();
+        }
+      },
     );
   }
+}
 
-  Widget getHome() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  child: Text(
-                    "Account Overview",
-                    style: TextStyle(
-                      color: AppColor.COLOR_3A4276,
-                      fontSize: 16,
-                      fontWeight: AppFontWeight.semiBold,
-                    ),
-                  ),
-                ),
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: AppColor.COLOR_F1F3F6,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding: EdgeInsets.symmetric(
-                    vertical: 40,
-                    horizontal: 30,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "20,000",
-                            style: TextStyle(
-                              color: AppColor.COLOR_171822,
-                              fontSize: 28,
-                              fontWeight: AppFontWeight.semiBold,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "Current balance",
-                            style: TextStyle(
-                              color: AppColor.COLOR_3A4276,
-                              fontSize: 14,
-                              letterSpacing: 0.8,
-                              fontWeight: AppFontWeight.regular,
-                            ),
-                          ),
-                        ],
-                      ),
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: Container(
-                          padding: EdgeInsets.all(20),
-                          color: AppColor.COLOR_FFAC30,
-                          child: SvgPicture.asset(
-                            AppMedia.getIcon("add.svg"),
-                            height: 16,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 30,
-          ),
-          Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Send Money",
-                        style: TextStyle(
-                          color: AppColor.COLOR_3A4276,
-                          fontSize: 16,
-                          fontWeight: AppFontWeight.semiBold,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          SvgPicture.asset(
-                            AppMedia.getIcon("scan.svg"),
-                            /*   height: 16, */
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  height: 180,
-                  child: NotificationListener<OverscrollIndicatorNotification>(
-                    onNotification:
-                        (OverscrollIndicatorNotification overscroll) {
-                      overscroll.disallowGlow();
-                      return true;
-                    },
-                    child: SingleChildScrollView(
-                      physics: BouncingScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      child: Flex(
-                        direction: Axis.horizontal,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.symmetric(horizontal: 20),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
-                              child: Container(
-                                padding: EdgeInsets.all(20),
-                                color: AppColor.COLOR_FFAC30,
-                                child: SvgPicture.asset(
-                                  AppMedia.getIcon("add.svg"),
-                                  height: 16,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            height: 130,
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 30,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColor.COLOR_F1F3F6,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: Container(
-                                    alignment: Alignment.bottomCenter,
-                                    color: AppColor.COLOR_FFFFFF,
-                                    child: SvgPicture.asset(
-                                        AppMedia.getImage("avatar03.svg")),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 13,
-                                ),
-                                Text(
-                                  "Mike",
-                                  style: TextStyle(
-                                    color: AppColor.COLOR_3A4276,
-                                    fontSize: 14,
-                                    letterSpacing: 0.8,
-                                    fontWeight: AppFontWeight.regular,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Container(
-                            height: 130,
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 30,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColor.COLOR_F1F3F6,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: Container(
-                                    alignment: Alignment.bottomCenter,
-                                    color: AppColor.COLOR_FFFFFF,
-                                    child: SvgPicture.asset(
-                                        AppMedia.getImage("avatar04.svg")),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 13,
-                                ),
-                                Text(
-                                  "Joshpeh",
-                                  style: TextStyle(
-                                    color: AppColor.COLOR_3A4276,
-                                    fontSize: 14,
-                                    letterSpacing: 0.8,
-                                    fontWeight: AppFontWeight.regular,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Container(
-                            height: 130,
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 30,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColor.COLOR_F1F3F6,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: Container(
-                                    alignment: Alignment.bottomCenter,
-                                    color: AppColor.COLOR_FFFFFF,
-                                    child: SvgPicture.asset(
-                                        AppMedia.getImage("avatar02.svg")),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 13,
-                                ),
-                                Text(
-                                  "Ashley",
-                                  style: TextStyle(
-                                    color: AppColor.COLOR_3A4276,
-                                    fontSize: 14,
-                                    letterSpacing: 0.8,
-                                    fontWeight: AppFontWeight.regular,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Services",
-                        style: TextStyle(
-                          color: AppColor.COLOR_3A4276,
-                          fontSize: 16,
-                          fontWeight: AppFontWeight.semiBold,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          SvgPicture.asset(
-                            AppMedia.getIcon("filter.svg"),
-                            /*   height: 16, */
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Wrap(
-                  spacing: 30,
-                  runSpacing: 20,
-                  children: [
-                    Column(
-                      children: [
-                        Container(
-                          width: 65,
-                          height: 65,
-                          decoration: BoxDecoration(
-                            color: AppColor.COLOR_F1F3F6,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: EdgeInsets.all(20),
-                          child: SvgPicture.asset(AppMedia.getIcon(
-                            "send-money.svg",
-                          )),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "Send\nMoney",
-                          style: TextStyle(
-                            color: AppColor.COLOR_7B7F9E,
-                            fontSize: 14,
-                            height: 1.5,
-                            fontWeight: AppFontWeight.regular,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          width: 65,
-                          height: 65,
-                          decoration: BoxDecoration(
-                            color: AppColor.COLOR_F1F3F6,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: EdgeInsets.all(20),
-                          child: SvgPicture.asset(AppMedia.getIcon(
-                            "receive.svg",
-                          )),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "Receive\nMoney",
-                          style: TextStyle(
-                            color: AppColor.COLOR_7B7F9E,
-                            fontSize: 14,
-                            height: 1.5,
-                            fontWeight: AppFontWeight.regular,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          width: 65,
-                          height: 65,
-                          decoration: BoxDecoration(
-                            color: AppColor.COLOR_F1F3F6,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: EdgeInsets.all(20),
-                          child: SvgPicture.asset(AppMedia.getIcon(
-                            "mobile.svg",
-                          )),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "Mobile\nPrepaid",
-                          style: TextStyle(
-                            color: AppColor.COLOR_7B7F9E,
-                            fontSize: 14,
-                            height: 1.5,
-                            fontWeight: AppFontWeight.regular,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          width: 65,
-                          height: 65,
-                          decoration: BoxDecoration(
-                            color: AppColor.COLOR_F1F3F6,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: EdgeInsets.all(20),
-                          child: SvgPicture.asset(AppMedia.getIcon(
-                            "electric.svg",
-                          )),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "Electricity\nBill",
-                          style: TextStyle(
-                            color: AppColor.COLOR_7B7F9E,
-                            fontSize: 14,
-                            height: 1.5,
-                            fontWeight: AppFontWeight.regular,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          width: 65,
-                          height: 65,
-                          decoration: BoxDecoration(
-                            color: AppColor.COLOR_F1F3F6,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: EdgeInsets.all(20),
-                          child: SvgPicture.asset(AppMedia.getIcon(
-                            "offers.svg",
-                          )),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "Cashback\nOffer",
-                          style: TextStyle(
-                            color: AppColor.COLOR_7B7F9E,
-                            fontSize: 14,
-                            height: 1.5,
-                            fontWeight: AppFontWeight.regular,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          width: 65,
-                          height: 65,
-                          decoration: BoxDecoration(
-                            color: AppColor.COLOR_F1F3F6,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: EdgeInsets.all(20),
-                          child: SvgPicture.asset(AppMedia.getIcon(
-                            "tickets.svg",
-                          )),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "Movie\nTickets",
-                          style: TextStyle(
-                            color: AppColor.COLOR_7B7F9E,
-                            fontSize: 14,
-                            height: 1.5,
-                            fontWeight: AppFontWeight.regular,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          width: 65,
-                          height: 65,
-                          decoration: BoxDecoration(
-                            color: AppColor.COLOR_F1F3F6,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: EdgeInsets.all(20),
-                          child: SvgPicture.asset(AppMedia.getIcon(
-                            "flight.svg",
-                          )),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "Flight\nTickets",
-                          style: TextStyle(
-                            color: AppColor.COLOR_7B7F9E,
-                            fontSize: 14,
-                            height: 1.5,
-                            fontWeight: AppFontWeight.regular,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          width: 65,
-                          height: 65,
-                          decoration: BoxDecoration(
-                            color: AppColor.COLOR_F1F3F6,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: EdgeInsets.all(20),
-                          child: SvgPicture.asset(AppMedia.getIcon(
-                            "options.svg",
-                          )),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "More\nOptions",
-                          style: TextStyle(
-                            color: AppColor.COLOR_7B7F9E,
-                            fontSize: 14,
-                            height: 1.5,
-                            fontWeight: AppFontWeight.regular,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+class BackgroundWidget extends StatelessWidget {
+  const BackgroundWidget({
+    Key? key,
+    required this.bloc,
+    required this.context,
+  }) : super(key: key);
 
-  Expanded getAppBar(BuildContext context) {
-    return Expanded(
-      flex: 10,
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: 20,
-        ),
-        child: Row(
-          children: [
-            SvgPicture.asset(
-              AppMedia.getIcon("logo.svg"),
-              height: 30,
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              "eWalle",
-              style: TextStyle(
-                color: AppColor.COLOR_1B1D28,
-                fontSize: 30,
-                fontWeight: AppFontWeight.bold,
-              ),
-            ),
-            Spacer(),
-            Container(
-              width: 50,
-              height: 50,
-              child: AspectRatio(
-                aspectRatio: 1 / 1,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      overlayColor:
-                          MaterialStateProperty.all(Color(0x153A4276)),
-                      elevation: MaterialStateProperty.all(0),
-                      foregroundColor:
-                          MaterialStateProperty.all(Colors.transparent),
-                      backgroundColor:
-                          MaterialStateProperty.all(AppColor.COLOR_FFFFFF),
-                    ),
-                    onPressed: () {
-                      double x = MediaQuery.of(context).size.width * 0.5;
-                      double y = MediaQuery.of(context).size.height * 0.23;
+  final HomeBloc bloc;
+  final BuildContext context;
 
-                      bloc.setPositionStream!(PositionOffset(
-                          x: x, y: y, scale: 0.6, angle: -0.261799));
-                      bloc.setmenuStateStream!(MENU_STATE.OPEN);
-                    },
-                    child: SvgPicture.asset(
-                      AppMedia.getIcon("menu.svg"),
-                      height: 40,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 5,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget getBackground() {
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         Expanded(
           flex: 15,
-          child: Container(
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 70,
-                  child: Container(
-                    child: Container(
-                      padding: EdgeInsets.only(left: 20),
-                      width: double.infinity,
-                      height: double.infinity,
-                      decoration: BoxDecoration(
-                        color: AppColor.COLOR_FFFFFF,
-                        borderRadius: BorderRadius.only(
-                          bottomRight: Radius.circular(70),
-                        ),
-                      ),
-                      child: SafeArea(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                bloc.setHomePageStream!(1);
-                                bloc.setPositionStream!(PositionOffset(
-                                    x: 0, y: 0, scale: 1, angle: 0));
-                                bloc.setmenuStateStream!(MENU_STATE.CLOSE);
-                              },
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
-                                child: Container(
-                                  color: AppColor.COLOR_F1F3F6,
-                                  child: SvgPicture.asset(
-                                    AppMedia.getImage("avatar01.svg"),
-                                    width: 50,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 13,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                bloc.setHomePageStream!(1);
-                                bloc.setPositionStream!(PositionOffset(
-                                    x: 0, y: 0, scale: 1, angle: 0));
-                                bloc.setmenuStateStream!(MENU_STATE.CLOSE);
-                              },
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Carol Black",
-                                    style: TextStyle(
-                                      color: AppColor.COLOR_1B1D28,
-                                      fontSize: 20,
-                                      fontWeight: AppFontWeight.semiBold,
-                                      height: 1.4,
-                                    ),
-                                  ),
-                                  Text(
-                                    "Seattle,Washington",
-                                    style: TextStyle(
-                                      color: AppColor.COLOR_7B7F9E,
-                                      fontSize: 14,
-                                      fontWeight: AppFontWeight.regular,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 40,
-                  child: SafeArea(
-                    child: Container(
-                      padding: EdgeInsets.only(right: 25),
-                      alignment: Alignment.centerRight,
-                      child: Container(
-                        width: 50,
-                        height: 50,
-                        child: AspectRatio(
-                          aspectRatio: 1 / 1,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            child: ElevatedButton(
-                              style: ButtonStyle(
-                                overlayColor: MaterialStateProperty.all(
-                                    Color(0x153A4276)),
-                                elevation: MaterialStateProperty.all(0),
-                                foregroundColor: MaterialStateProperty.all(
-                                    Colors.transparent),
-                                backgroundColor: MaterialStateProperty.all(
-                                    AppColor.COLOR_F1F3F6),
-                              ),
-                              onPressed: () {
-                                bloc.setPositionStream!(PositionOffset(
-                                    x: 0, y: 0, scale: 1, angle: 0));
-                                bloc.setmenuStateStream!(MENU_STATE.CLOSE);
-                              },
-                              child: SvgPicture.asset(
-                                AppMedia.getIcon("close.svg"),
-                                height: 18,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          child: ManuDrawerAppBar(bloc: bloc),
         ),
         Expanded(
           flex: 65,
-          child: Container(
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 50,
-                  child: Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Spacer(),
-                        Expanded(
-                          flex:
-                              MediaQuery.of(context).size.height < 590 ? 10 : 4,
-                          child: StreamBuilder<dynamic>(
-                              stream: bloc.homePageStream,
-                              builder: (context, snapshot) {
-                                if (snapshot.data != null) {
-                                  return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: menuList
-                                        .map(
-                                          (e) => getNavigationOption(
-                                              e, snapshot.data),
-                                        )
-                                        .toList(),
-                                  );
-                                }
-                                return Container();
-                              }),
-                        ),
-                        Spacer(),
-                        /*   Expanded(child: Container()), */
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 50,
-                  child: Container(),
-                ),
-              ],
-            ),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 50,
+                child: MenuWidget(context: context, bloc: bloc),
+              ),
+              Expanded(
+                flex: 50,
+                child: Container(),
+              ),
+            ],
           ),
         ),
         Expanded(
@@ -919,55 +155,7 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pushReplacement(
-                      PageRouteBuilder(
-                        transitionDuration: Duration(milliseconds: 600),
-                        reverseTransitionDuration: Duration(milliseconds: 600),
-                        pageBuilder: (context, animation, secondaryanimation) =>
-                            SignIn(),
-                        transitionsBuilder:
-                            (context, animation, secondaryanimation, child) {
-                          return SlideTransition(
-                            child: child,
-                            position: animation.drive(
-                              Tween(
-                                begin: Offset(-1, 0),
-                                end: Offset(0, 0),
-                              ).chain(
-                                CurveTween(
-                                  curve: Curves.easeInCubic,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-
-                    Auth.setAuthState(false);
-                  },
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(
-                        AppMedia.getIcon("logout.svg"),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        "Logout",
-                        style: TextStyle(
-                          color: AppColor.COLOR_1B1D28,
-                          fontSize: 20,
-                          fontWeight: AppFontWeight.semiBold,
-                          height: 1.4,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                LogOutButton(context: context),
                 SizedBox(
                   height: 1,
                 ),
@@ -987,58 +175,47 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
+}
 
-  Widget getNavigationOption(String title, int selectedIndex) {
-    return GestureDetector(
-      onTap: () {
-        switch (title) {
-          case "Home":
-            bloc.setHomePageStream!(0);
-            break;
-          case "Profile":
-            bloc.setHomePageStream!(1);
-            break;
-          case "Accounts":
-            bloc.setHomePageStream!(2);
-            break;
-          case "Transactions":
-            bloc.setHomePageStream!(3);
-            break;
-          case "Stats":
-            bloc.setHomePageStream!(4);
-            break;
-          case "Settings":
-            bloc.setHomePageStream!(5);
-            break;
-          case "Help":
-            bloc.setHomePageStream!(6);
-            break;
-        }
-        bloc.setPositionStream!(PositionOffset(x: 0, y: 0, scale: 1, angle: 0));
-        bloc.setmenuStateStream!(MENU_STATE.CLOSE);
-      },
-      child: Container(
-        padding: EdgeInsets.only(
-          left: 20,
-          top: 7,
-          bottom: 7,
-        ),
-        decoration: BoxDecoration(
-            border: Border(
-          left: BorderSide(
-            width: 5,
-            color: title == menuList[selectedIndex]
-                ? AppColor.COLOR_FFAC30
-                : AppColor.COLOR_F1F3F6,
-          ),
-        )),
+class HomeWidget extends StatelessWidget {
+  const HomeWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: Column(
+        children: [
+          BalanceCard(),
+          SizedBox(height: 30),
+          SendMoneyWidget(),
+          SizedBox(height: 10),
+          ServicesWidget(),
+        ],
+      ),
+    );
+  }
+}
+
+class Page extends StatelessWidget {
+  const Page({
+    Key? key,
+    required this.title,
+  }) : super(key: key);
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Center(
         child: Text(
           title,
           style: TextStyle(
-            color: AppColor.COLOR_1B1D28,
-            fontSize: 18,
-            fontWeight: AppFontWeight.semiBold,
-            height: 1.4,
+            fontSize: 22,
+            color: AppColor.COLOR_3A4276,
           ),
         ),
       ),
