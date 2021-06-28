@@ -6,7 +6,7 @@ eWalle means electronic wallet or digital wallet where people can transfer money
 
 ## Demo
 
-![App Screenshot](https://github.com/Sagarnaikg/eWalle/blob/master/eWalle.png)
+![App Screenshot](https://github.com/Sagarnaikg/eWalle/blob/master/demo.gif)
 
   
 ## Features
