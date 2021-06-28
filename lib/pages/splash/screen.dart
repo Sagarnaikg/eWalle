@@ -30,60 +30,58 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              TweenAnimationBuilder(
-                curve: Curves.fastOutSlowIn,
-                tween: Tween<double>(begin: 0, end: 85),
-                duration: const Duration(milliseconds: 1700),
-                builder: (context, double value, child) {
-                  return Opacity(
-                    opacity: value / 90,
-                    child: Container(
-                      color: Colors.white,
-                      margin: EdgeInsets.only(
-                        left: value,
-                      ),
-                      child: child,
-                    ),
-                  );
-                },
-                child: Text(
-                  "eWalle",
-                  style: TextStyle(
-                    color: AppColor.COLOR_1B1D28,
-                    fontSize: 30,
-                    fontWeight: AppFontWeight.bold,
-                  ),
-                ),
-                onEnd: () {
-                  getAuthState();
-                },
-              ),
-              TweenAnimationBuilder(
-                curve: Curves.fastOutSlowIn,
-                tween: Tween<double>(begin: 0, end: 85),
-                duration: const Duration(milliseconds: 1700),
-                builder: (context, double value, child) {
-                  return Container(
+      body: Center(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            TweenAnimationBuilder(
+              curve: Curves.fastOutSlowIn,
+              tween: Tween<double>(begin: 0, end: 85),
+              duration: const Duration(milliseconds: 1700),
+              builder: (context, double value, child) {
+                return Opacity(
+                  opacity: value / 90,
+                  child: Container(
                     color: Colors.white,
                     margin: EdgeInsets.only(
-                      right: value,
+                      left: value,
                     ),
                     child: child,
-                  );
-                },
-                child: SvgPicture.asset(
-                  AppMedia.getIcon("logo.svg"),
-                  width: 60,
-                  height: 40,
+                  ),
+                );
+              },
+              child: Text(
+                "eWalle",
+                style: TextStyle(
+                  color: AppColor.COLOR_1B1D28,
+                  fontSize: 30,
+                  fontWeight: AppFontWeight.bold,
                 ),
               ),
-            ],
-          ),
+              onEnd: () {
+                getAuthState();
+              },
+            ),
+            TweenAnimationBuilder(
+              curve: Curves.fastOutSlowIn,
+              tween: Tween<double>(begin: 0, end: 85),
+              duration: const Duration(milliseconds: 1700),
+              builder: (context, double value, child) {
+                return Container(
+                  color: Colors.white,
+                  margin: EdgeInsets.only(
+                    right: value,
+                  ),
+                  child: child,
+                );
+              },
+              child: SvgPicture.asset(
+                AppMedia.getIcon("logo.svg"),
+                width: 60,
+                height: 40,
+              ),
+            ),
+          ],
         ),
       ),
     );
